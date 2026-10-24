@@ -210,6 +210,11 @@ npm start            # build + start
 
 Em produção o servidor serve tudo na porta 2567 (`PORT` para mudar).
 
+**Cliente fora do servidor (opcional):** para servir o cliente de outra origem (app empacotado, outro host estático),
+builde com `VITE_SERVER_URL=http://SERVIDOR:2567 npm run build:client` e ligue no servidor
+`LEMONQUEST_CORS_ORIGINS` com a origem exata de onde o cliente é servido (ex.: `http://localhost`). O endereço só vale
+em build, de propósito: um `?server=` na URL deixaria um link apontar o cliente para outro servidor e colher senhas.
+
 O build copia só o que o jogo usa (`tools/build-public.mjs`): do áudio do pack entram apenas os 45 sons referenciados
 em `sfx.ts` (o build falha se um som citado não existir), e os previews do mapa (`assets/maps/preview*.png`,
 `assets/maps/review/`) ficam fora do git e do build — o `tools/mapgen` os regenera. O `build:server` também gera

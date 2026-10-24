@@ -15,12 +15,15 @@ import { backupCopyDir, backupDir, startBackups } from "./persistence/backup.ts"
 import { devAdmins, devCommandsEnabled } from "./systems/devcommands.ts";
 import { e2eMode } from "./e2e.ts";
 import { gzipStatic } from "./gzipStatic.ts";
+import { corsHeadersFor, parseCorsOrigins } from "./cors.ts";
 
 const PORT = Number(process.env.PORT ?? 2567);
 const PROD = process.env.NODE_ENV === "production";
 /** Modo E2E (Playwright): serve o cliente buildado fora de produção, para os comandos de dev funcionarem (ver e2e.ts). */
 const E2E = e2eMode();
 const SERVE_CLIENT = PROD || E2E;
+/** Produção: origens de fora (app empacotado, cliente com VITE_SERVER_URL) que podem chamar a API (ver cors.ts). */
+const CORS_ORIGINS = parseCorsOrigins(process.env.LEMONQUEST_CORS_ORIGINS);
 const root = ROOT_DIR;
 const CHECKPOINT_MS = 5 * 60_000;
 
@@ -130,10 +133,11 @@ setSessionKicker((sid, reason) => currentWorld()?.kick(sid, reason));
 // pelo WebSocket com o reconnectionToken, sem passar por /matchmake.
 matchMaker.controller.exposedMethods = ["joinOrCreate"];
 if (PROD) {
-  // O Colyseus põe CORS aberto (Allow-Origin = origem pedida) em TODA resposta HTTP do servidor, inclusive /api.
-  // Em produção cliente e API têm a mesma origem: sem cabeçalhos CORS.
+  // O Colyseus põe CORS aberto (Allow-Origin = origem pedida) em TODA resposta HTTP do servidor, inclusive /api, e
+  // responde ele mesmo todo OPTIONS. Em produção cliente e API têm a mesma origem: sem cabeçalhos CORS, salvo as
+  // origens de LEMONQUEST_CORS_ORIGINS.
   matchMaker.controller.DEFAULT_CORS_HEADERS = {} as typeof matchMaker.controller.DEFAULT_CORS_HEADERS;
-  matchMaker.controller.getCorsHeaders = () => ({});
+  matchMaker.controller.getCorsHeaders = (headers) => corsHeadersFor(headers.get("origin"), CORS_ORIGINS);
 }
 
 let stopBackups: () => void = () => {};

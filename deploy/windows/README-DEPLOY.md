@@ -189,6 +189,7 @@ Com o atalho (5B): feche a janela do servidor, rode os mesmos `git pull` / `npm 
 | `LEMONQUEST_CLICKUP_TOKEN` | vazio | Token pessoal do ClickUp (só leitura): liga o "Chegou!", as barras de sprint, a aba "Na obra" e as conquistas de tarefas (veja "ClickUp no jogo" no README principal). Sem ele, nada disso liga. Precisa de saída HTTPS para `api.clickup.com`. |
 | `LEMONQUEST_CLICKUP_POLL_MIN` | `5` | Minutos entre leituras do ClickUp (1 a 60). |
 | `LEMONQUEST_CLICKUP_TEAM` / `LEMONQUEST_CLICKUP_PURCHASES_LIST` | do código | Workspace e lista "Controle de Compras", se mudarem. |
+| `LEMONQUEST_CORS_ORIGINS` | vazio | Só para cliente servido **de outra origem** (app empacotado, build com `VITE_SERVER_URL`): origens exatas separadas por vírgula (ex.: `"http://localhost"`). Vazio = sem CORS, como sempre. `*` é recusado. |
 | `NODE_ENV` | - | Use `production` (o `npm run start:fast` já define). |
 
 No serviço, acrescente-as em `AppEnvironmentExtra` (ex.: `nssm set LemonQuest AppEnvironmentExtra NODE_ENV=production LEMONQUEST_BACKUP_DIR=D:\backups-lemonquest`). Lembre que esse comando **substitui** a lista inteira.

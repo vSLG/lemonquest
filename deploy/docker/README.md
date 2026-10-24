@@ -118,6 +118,7 @@ Edite `docker-compose.yml` (seção `environment`) e rode `docker compose up -d`
 | `LEMONQUEST_ADMINS` | vazio | Personagens administradores (ex.: `"Leonardo, Ana"`) — comandos de admin, veja o passo 9. |
 | `LEMONQUEST_ADMIN_ACCOUNTS` | vazio | Contas (login) que podem criar personagens com nome de admin. Sem ela, nomes de admin ainda não criados ficam reservados. |
 | `LEMONQUEST_TRUST_PROXY` | vazio | Só atrás do Caddy **com a 2567 fechada** (`"uniquelocal"`): o limite de login por IP usa o IP real do jogador. |
+| `LEMONQUEST_CORS_ORIGINS` | vazio | Só para cliente servido **de outra origem** (app empacotado, build com `VITE_SERVER_URL`): origens exatas separadas por vírgula (ex.: `"http://localhost"`). Vazio = sem CORS, como sempre. `*` é recusado. |
 | `LEMONQUEST_DEV_COMMANDS` | desligado | `"1"` liga /level, /item etc. para os admins — só fora de produção (no container, que roda em produção, nunca liga). |
 | `LEMONQUEST_BACKUP_COPY_DIR` | vazio | Pasta para uma **cópia extra** de cada backup (outro disco/NAS). Veja o passo 5. |
 | `LEMONQUEST_CLICKUP_TOKEN` | vazio | Token pessoal do ClickUp (só leitura) que liga o "Chegou!", as barras de sprint, a aba "Na obra" e as conquistas de tarefas ([README](../../README.md#clickup-no-jogo-opcional)). O `docker-compose.yml` já repassa a variável: só crie um `.env` ao lado dele com `LEMONQUEST_CLICKUP_TOKEN=pk_...` e rode `docker compose up -d` (**nunca** escreva o token no compose; o `.env` não vai para o git). O container precisa de saída para `api.clickup.com` (HTTPS). |

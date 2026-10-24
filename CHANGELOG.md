@@ -1,5 +1,17 @@
 # Changelog
 
+## [Não lançado] — 2026-10-24 · cliente fora do servidor (VITE_SERVER_URL + LEMONQUEST_CORS_ORIGINS)
+
+Primeiro passo da proposta de cliente flexível (telas menores, app empacotado): o cliente pode falar com um servidor
+de outra origem. Sem as duas variáveis, nada muda.
+- **Cliente**: `VITE_SERVER_URL` (só em build) fixa o servidor; a resolução saiu para `client/endpoint.ts` com teste.
+  Nada de `?server=` na URL: um link malicioso apontaria o cliente para outro servidor e colheria senhas.
+- **Servidor**: `LEMONQUEST_CORS_ORIGINS` (produção) lista origens exatas que recebem CORS; vazio = sem CORS, como
+  antes. `*`, `null` ou origem com caminho derrubam a inicialização. Vai com `Allow-Credentials` porque o SDK do
+  Colyseus chama `/matchmake` com `credentials: "include"` (sem isso o join era barrado; achado na prova no navegador).
+- Prova: servidor em produção (banco temporário) + cliente buildado com `VITE_SERVER_URL` servido em outra porta:
+  conta criada, personagem entra no mundo sem erro no console; sem a lista, o navegador barra em `/api/session`.
+
 ## [Não lançado] — 2026-10-24 · ajuste da Malha: nomes comuns e saídas
 
 - Pedido do dono: **por enquanto, bichos e itens com nomes comuns**; NPCs, missões e locais continuam com os nomes
